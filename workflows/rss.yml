@@ -1,17 +1,18 @@
+name: Send a Discord message when new Youtube videos update
 on:
-  rss:
-    url: https://hnrss.org/newest?points=300&count=3
+  youtube:
+    channel_id:
+      - UCQdjLMEXkkj9M1Q-7lxN9XA
 jobs:
-  print:
-    name: Print
+  discord:
+    name: Send a message to discord
     runs-on: ubuntu-latest
     steps:
-      - name: Print Outputs
+      - name: Discord notification
         env:
-          title: ${{on.rss.outputs.title}}
-          contentSnippet: ${{on.rss.outputs.contentSnippet}}
-          link: ${{on.rss.outputs.link}}
-        run: |
-          echo title: $title
-          echo contentSnippet: $contentSnippet
-          echo link: $link
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
+          DISCORD_USERNAME: ${{ secrets.DISCORD_USERNAME }}
+          DISCORD_AVATAR: ${{ secrets.DISCORD_AVATAR }}
+        uses: Ilshidur/action-discord@master
+        with:
+          args: "`대한두통학회 - YouTube`'\n'**${{on.youtube.outputs.title}}**'\n'${{on.youtube.outputs.link}}"
